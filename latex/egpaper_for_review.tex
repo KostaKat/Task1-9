@@ -1,0 +1,95 @@
+\documentclass[10pt,twocolumn,letterpaper]{article}
+
+\usepackage{cvpr}
+\usepackage{times}
+\usepackage{epsfig}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{tabularx} 
+% Include other packages here, before hyperref.
+
+% If you comment hyperref and then uncomment it, you should delete
+% egpaper.aux before re-running latex.  (Or just hit 'q' on the first latex
+% run, let it finish, and you should be clear).
+\usepackage[pagebackref=true,breaklinks=true,letterpaper=true,colorlinks,bookmarks=false]{hyperref}
+
+\cvprfinalcopy % *** Uncomment this line for the final submission
+
+\def\cvprPaperID{****} % *** Enter the CVPR Paper ID here
+\def\httilde{\mbox{\tt\raisebox{-.5ex}{\symbol{126}}}}
+
+% Pages are numbered in submission mode, and unnumbered in camera-ready
+\ifcvprfinal\pagestyle{empty}\fi
+\begin{document}
+
+%%%%%%%%% TITLE
+\title{Tasks 1-9}
+
+\author{Konstantinos Katergaris\\
+Arizona State University\\
+1151 S Forest Ave, Tempe, AZ\\
+{\tt\small kkaterga@asu.edu}}
+
+%\thispagestyle{empty}
+
+\maketitle
+
+\section{Task 8}
+\subsection{Introduction}
+The task was to perform anomaly detection on a dataset of chest x-ray images. A model from the anomalib library, ReverseDistillation, was used. It was trained only on normal chest x-ray images and tested on both flipped x-ray images and normal images. This resulted in an AUROC of 0.8056 and an F1 Score of 0.6399.
+
+\subsection{Dataset}
+The dataset consisted of 200 normal chest x-ray images for training, 30 normal chest x-rays for testing, and 17 unique flipped chest x-rays for testing. The data was loaded using the `Folder` object from the anomalib library. Furthermore, the test set can be found at \cite{DatasetForClass}. Note that the flipped chest x-rays contained two versions of each unique sample in both .tif and .bmp formats; however, only the .bmp format was used.
+
+\subsection{Implementation}
+The model used was the ReverseDistillation model from the anomalib library. A batch size of 32 was used for both training and testing. Additionally, the model was trained over 100 epochs with early stopping, which was applied with a patience of 10, terminating at 20 epochs. This implementation was inspired by \cite{randellini2023anomalib}. The default fit function was used for training.
+
+\subsection{Results}
+The following table shows the test results when evaluating on the test set of normal and flipped images. These results were measured using AUROC and F1 Score:
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{|c|c|c|}
+\hline
+ \textbf{AUROC} & \textbf{F1 Score} \\
+\hline
+ 0.8056 & 0.6399 \\
+
+\hline
+\end{tabular}
+\caption{Test results on normal and flipped chest x-ray images.}
+\end{table}
+\subsection{Conclusion}
+The model performed worse than expected. It was hypothesized that it would perform well, as this is typically an easy task for classification deep learning models. After manually inspecting the flipped images, they are very similar to the normal images, which may have caused the model to struggle when trying to differentiate between them.
+
+\section{Task 9}
+
+\subsection{Introduction}
+The task was to apply a clustering algorithm to a dataset of images to determine the orientation in which an image was flipped. The KMeans clustering algorithm was used. The model was trained on flattened images and successfully clustered all the test images correctly, achieving an accuracy of 100\%.
+
+\subsection{Dataset}
+The dataset is comprised of four distinct categories: images rotated at $0^{\circ}$ (Up), $90^{\circ}$ (Right), $180^{\circ}$ (Down), and $270^{\circ}$ (Left). In total, there are 988 images, with an equal distribution of 247 images in each category. Of these, 237 images per category are allocated for training, while the remaining 10 images per category are set aside for testing.
+
+\subsection{Implementation}
+The MiniBatchKMeans model from scikit-learn was used. The model was initialized with 4 clusters, a random seed of 0, and a batch size of 32. The images were flattened into 2D arrays before training and testing. The implementation followed these steps:
+\begin{itemize}
+    \item Load the images and convert them into tensors.
+    \item Flatten the images into 1D arrays.
+    \item Train the model on the flattened training images.
+    \item Predict the cluster labels for the test set images using the trained model.
+\end{itemize}
+
+\subsection{Results}
+
+It is hypothesized that the model will be able to classify all the images correctly. After visually inspecting each image and its assigned cluster, the model achieved 100\% accuracy.
+
+\subsection{Conclusion}
+As hypothesized, the model achieved 100\% accuracy. This result is expected because classifying the orientation of chest x-ray images is a simple task for machine learning models. Therefore, unsupervised clustering models are effective for this task.
+
+{\small
+\bibliographystyle{ieee_fullname}
+\bibliography{egbib}
+}
+
+\end{document}
